@@ -2,7 +2,9 @@
 The Best Website For Your Hosting
 
 
-_ADMIN ID - ADMIN ADMIN PASS - admin123_
+ADMIN ID - ```ADMIN```     
+
+ADMIN PASS - ```admin123```
 
 # CONNECT IT YOUR DOMAIN AND ENJOY
 
