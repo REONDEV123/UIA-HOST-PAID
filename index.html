@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UIA HOST | Futuristic VPS & Minecraft Hosting</title>
+  <meta name="description" content="UIA HOST offers futuristic VPS and Minecraft hosting with demo auth, localStorage persistence, and a live admin panel.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --text: #e7edff;
+      --muted: #9ca8d0;
+      --accent: #36b8ff;
+      --accent-2: #8a5dff;
+      --accent-3: #1ef2ff;
+      --success: #37e69c;
+      --danger: #ff6b91;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --container: min(1180px, calc(100vw - 32px));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 20%, rgba(54, 184, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(138, 93, 255, 0.22), transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(30, 242, 255, 0.12), transparent 30%),
+        linear-gradient(135deg, #050813 0%, #0a1120 45%, #090d1a 100%);
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::before {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.38), transparent 85%);
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 25% 30%, rgba(54, 184, 255, 0.06), transparent 24%),
+        radial-gradient(circle at 75% 70%, rgba(138, 93, 255, 0.08), transparent 28%);
+      filter: blur(30px);
+      opacity: 0.8;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .container {
+      width: var(--container);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(18px);
+      background: rgba(6, 10, 21, 0.72);
+      border-bottom: 1px solid rgba(125, 162, 255, 0.12);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 82px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: linear-gradient(135deg, rgba(54, 184, 255, 0.28), rgba(138, 93, 255, 0.38));
+      border: 1px solid rgba(125, 162, 255, 0.24);
+      box-shadow: 0 0 30px rgba(54, 184, 255, 0.16);
+    }
+
+    .brand-title,
+    .section-title,
+    .showcase-title,
+    .hero h1,
+    .stat-value,
+    .metric strong {
+      font-family: "Orbitron", sans-serif;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      font-size: 1rem;
+    }
+
+    .brand-subtitle {
+      margin-top: 3px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-link,
+    .nav-button,
+    .discord-btn,
+    .primary-btn,
+    .secondary-btn,
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .nav-link {
+      padding: 10px 14px;
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-button:hover,
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .ghost-btn:hover,
+    .discord-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-button,
+    .secondary-btn {
+      color: var(--text);
+      border: 1px solid rgba(125, 162, 255, 0.2);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .primary-btn {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 30px rgba(67, 140, 255, 0.28);
+    }
+
+    .ghost-btn {
+      color: var(--muted);
+      border: 1px solid rgba(125, 162, 255, 0.14);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .discord-btn {
+      color: white;
+      background: linear-gradient(135deg, #5865f2, #7a83ff);
+      box-shadow: 0 12px 34px rgba(88, 101, 242, 0.28);
+    }
+
+    .hero {
+      padding: 72px 0 40px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.88fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-panel,
+    .showcase-panel,
+    .section-shell,
+    .account-panel,
+    .admin-shell,
+    .footer-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(125, 162, 255, 0.16);
+      background: linear-gradient(180deg, rgba(15, 24, 47, 0.88), rgba(9, 15, 31, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel::before,
+    .showcase-panel::before,
+    .section-shell::before,
+    .account-panel::before,
+    .admin-shell::before,
+    .footer-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(54, 184, 255, 0.06), transparent 35%, rgba(138, 93, 255, 0.08));
+      pointer-events: none;
+    }
+
+    .hero-content,
+    .showcase-panel,
+    .section-shell,
+    .account-panel,
+    .admin-shell {
+      padding: 28px;
+    }
+
+    .eyebrow,
+    .plan-chip,
+    .live-pill,
+    .service-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--accent-3);
+      background: rgba(30, 242, 255, 0.08);
+      border: 1px solid rgba(30, 242, 255, 0.16);
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 18px 0 14px;
+      font-size: clamp(2.3rem, 4.8vw, 4.7rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .hero h1 span {
+      color: var(--accent-3);
+      text-shadow: 0 0 24px rgba(30, 242, 255, 0.26);
+    }
+
+    .hero p,
+    .section-subtitle,
+    .footer-copy,
+    .helper-text {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .hero-actions,
+    .form-actions,
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+    }
+
+    .hero-stats,
+    .showcase-metrics,
+    .catalog-grid,
+    .services-grid,
+    .admin-grid,
+    .manage-grid,
+    .plan-editor-list,
+    .users-stack,
+    .admin-form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-stats {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 30px;
+    }
+
+    .stat-card,
+    .metric,
+    .service-card,
+    .admin-card,
+    .plan-editor,
+    .user-pill,
+    .account-summary,
+    .services-list,
+    .empty-state,
+    .admin-form-card,
+    .user-list,
+    .modal-card {
+      border-radius: 22px;
+      border: 1px solid rgba(125, 162, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat-card,
+    .metric,
+    .service-card,
+    .admin-card,
+    .plan-editor,
+    .account-summary,
+    .services-list,
+    .empty-state,
+    .admin-form-card,
+    .user-list {
+      padding: 18px;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-label,
+    .metric small,
+    .user-pill span,
+    .order-note,
+    .field label {
+      color: var(--muted);
+    }
+
+    .showcase-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      justify-content: space-between;
+    }
+
+    .showcase-top,
+    .section-header,
+    .admin-banner,
+    .admin-form-header,
+    .plan-editor-top,
+    .footer-shell {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .showcase-title {
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .server-visual {
+      min-height: 260px;
+      border-radius: 24px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(30, 242, 255, 0.22), transparent 26%),
+        linear-gradient(180deg, rgba(8, 14, 27, 0.78), rgba(7, 12, 24, 0.96));
+      border: 1px solid rgba(125, 162, 255, 0.12);
+      display: grid;
+      place-items: center;
+    }
+
+    .server-rack {
+      width: min(88%, 340px);
+      display: grid;
+      gap: 12px;
+    }
+
+    .rack-unit {
+      height: 54px;
+      border-radius: 16px;
+      background: linear-gradient(90deg, rgba(12, 24, 48, 0.98), rgba(19, 38, 70, 0.88));
+      border: 1px solid rgba(125, 162, 255, 0.16);
+      box-shadow: inset 0 0 18px rgba(54, 184, 255, 0.08);
+      position: relative;
+    }
+
+    .rack-unit::before,
+    .rack-unit::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .rack-unit::before {
+      left: 18px;
+      right: 18px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(54, 184, 255, 0.8), transparent);
+      box-shadow: 0 0 12px rgba(54, 184, 255, 0.5);
+      animation: pulseLine 3s infinite ease-in-out;
+    }
+
+    .rack-unit::after {
+      width: 10px;
+      height: 10px;
+      right: 18px;
+      border-radius: 999px;
+      background: var(--accent-3);
+      box-shadow: 0 0 14px rgba(30, 242, 255, 0.86);
+    }
+
+    .showcase-metrics,
+    .admin-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .section {
+      padding: 24px 0;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+    }
+
+    .catalog-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .plan-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 22px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(16, 27, 52, 0.94), rgba(10, 18, 35, 0.98));
+      border: 1px solid rgba(125, 162, 255, 0.14);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(54, 184, 255, 0.28);
+      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.36);
+    }
+
+    .plan-name {
+      margin: 18px 0 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .plan-price strong {
+      font-family: "Orbitron", sans-serif;
+      font-size: 2rem;
+      color: white;
+    }
+
+    .plan-price span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .plan-specs {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .plan-specs li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.6;
+    }
+
+    .plan-specs i {
+      color: var(--accent);
+      margin-top: 5px;
+    }
+
+    .account-shell,
+    .manage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 18px;
+    }
+
+    .service-card,
+    .user-pill {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .service-badge {
+      color: var(--success);
+      background: rgba(55, 230, 156, 0.08);
+      border-color: rgba(55, 230, 156, 0.16);
+    }
+
+    .admin-shell {
+      margin-top: 24px;
+    }
+
+    .admin-banner {
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(138, 93, 255, 0.08);
+      border: 1px solid rgba(138, 93, 255, 0.18);
+      margin-bottom: 20px;
+    }
+
+    .admin-form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--text);
+      background: rgba(6, 11, 24, 0.94);
+      border: 1px solid rgba(125, 162, 255, 0.16);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus {
+      border-color: rgba(54, 184, 255, 0.46);
+      box-shadow: 0 0 0 3px rgba(54, 184, 255, 0.14);
+    }
+
+    .save-btn,
+    .delete-btn,
+    .mini-btn {
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-weight: 800;
+    }
+
+    .save-btn,
+    .mini-btn {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .delete-btn {
+      color: #ffd7e1;
+      background: rgba(255, 107, 145, 0.08);
+      border: 1px solid rgba(255, 107, 145, 0.18);
+    }
+
+    .footer {
+      padding: 22px 0 34px;
+    }
+
+    .footer-shell {
+      padding: 20px 24px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(2, 5, 12, 0.72);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal.open {
+      display: flex;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-card {
+      width: min(520px, 100%);
+      padding: 26px;
+      box-shadow: var(--shadow);
+      background: linear-gradient(180deg, rgba(15, 24, 47, 0.98), rgba(8, 14, 27, 0.98));
+    }
+
+    .modal-top,
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .modal-top {
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .auth-tab {
+      padding: 10px 16px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      font-weight: 800;
+    }
+
+    .auth-tab.active {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .auth-panel { display: none; }
+    .auth-panel.active { display: block; }
+    .modal-form { display: grid; gap: 14px; }
+    .close-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.03); color: var(--muted); }
+
+    .status-bar {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 70;
+      max-width: min(380px, calc(100vw - 36px));
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(9, 16, 31, 0.94);
+      border: 1px solid rgba(125, 162, 255, 0.18);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .status-bar.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-bar.error {
+      border-color: rgba(255, 107, 145, 0.26);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s forwards;
+    }
+
+    .delay-1 { animation-delay: 0.08s; }
+    .delay-2 { animation-delay: 0.16s; }
+    .delay-3 { animation-delay: 0.24s; }
+    .delay-4 { animation-delay: 0.32s; }
+    .hidden { display: none !important; }
+
+    @keyframes pulseLine {
+      0%, 100% { opacity: 0.4; transform: translateY(-50%) scaleX(0.9); }
+      50% { opacity: 1; transform: translateY(-50%) scaleX(1); }
+    }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .account-shell,
+      .manage-grid,
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .nav {
+        align-items: flex-start;
+        padding: 14px 0;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .admin-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 9vw, 3rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="UIA HOST">
+        <div class="brand-mark"><i class="fa-solid fa-server"></i></div>
+        <div>
+          <div class="brand-title">UIA HOST</div>
+          <div class="brand-subtitle">VPS + Minecraft Hosting</div>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a class="nav-link" href="#vps-plans">VPS Plans</a>
+        <a class="nav-link" href="#mc-plans">MC Plans</a>
+        <a class="nav-link" href="#my-services">My Services</a>
+        <a class="nav-link hidden" id="admin-nav-link" href="#admin-panel">Admin</a>
+        <a class="discord-btn" href="https://discord.gg/vvyVGBDXjV" target="_blank" rel="noreferrer"><i class="fa-brands fa-discord"></i>Discord</a>
+        <button class="nav-button" id="auth-trigger" type="button"><i class="fa-solid fa-user"></i><span id="auth-trigger-label">Login / Sign Up</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-panel fade-up">
+          <div class="hero-content">
+            <div class="eyebrow"><i class="fa-solid fa-bolt"></i>High-performance cloud infrastructure</div>
+            <h1>Deploy faster with <span>UIA HOST</span></h1>
+            <p>Futuristic VPS and Minecraft hosting with fast NVMe storage, DDoS protection, a smooth ordering demo, and a live editable admin dashboard powered entirely by localStorage.</p>
+            <div class="hero-actions">
+              <a class="primary-btn" href="#vps-plans"><i class="fa-solid fa-rocket"></i>Explore Plans</a>
+              <button class="secondary-btn" id="hero-auth-btn" type="button"><i class="fa-solid fa-right-to-bracket"></i>Access Account</button>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-card"><span class="stat-value" id="stat-total-plans">8</span><span class="stat-label">Live hosting plans</span></div>
+              <div class="stat-card"><span class="stat-value" id="stat-users">0</span><span class="stat-label">Registered demo users</span></div>
+              <div class="stat-card"><span class="stat-value" id="stat-status">Guest</span><span class="stat-label">Current portal state</span></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="showcase-panel fade-up delay-1">
+          <div class="showcase-top">
+            <div class="showcase-title">Realtime Hosting Fabric</div>
+            <div class="live-pill">Live Demo</div>
+          </div>
+          <div class="server-visual" aria-hidden="true">
+            <div class="server-rack">
+              <div class="rack-unit"></div>
+              <div class="rack-unit"></div>
+              <div class="rack-unit"></div>
+              <div class="rack-unit"></div>
+            </div>
+          </div>
+          <div class="showcase-metrics">
+            <div class="metric"><small>Compute Tier</small><strong>Xeon Gold KVM</strong></div>
+            <div class="metric"><small>Game Hosting</small><strong>MC Plans Ready</strong></div>
+            <div class="metric"><small>Access Model</small><strong>User + Admin</strong></div>
+            <div class="metric"><small>Persistence</small><strong>localStorage</strong></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="vps-plans">
+      <div class="container">
+        <div class="section-shell fade-up delay-2">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">VPS Plans</h2>
+              <p class="section-subtitle">Intel Gold KVM infrastructure with Delhi location, NVMe storage, ECC memory, unmetered bandwidth, and layered protection.</p>
+            </div>
+          </div>
+          <div class="catalog-grid" id="vps-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="mc-plans">
+      <div class="container">
+        <div class="section-shell fade-up delay-3">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Minecraft Plans</h2>
+              <p class="section-subtitle">Game server hosting for lightweight worlds to high-performance communities, with instant demo ordering for signed-in users.</p>
+            </div>
+          </div>
+          <div class="catalog-grid" id="mc-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="my-services">
+      <div class="container">
+        <div class="account-panel fade-up delay-4">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">My Services</h2>
+              <p class="section-subtitle">Sign in to place demo orders and track the plans attached to your account.</p>
+            </div>
+          </div>
+          <div id="account-area"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hidden" id="admin-panel">
+      <div class="container">
+        <div class="admin-shell">
+          <div id="admin-area"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-shell">
+        <div class="footer-copy">UIA HOST demo portal. Public plans, user accounts, purchased services, and admin edits all stay synced in your browser storage.</div>
+        <div class="footer-actions">
+          <button class="ghost-btn" id="footer-admin-link" type="button"><i class="fa-solid fa-shield-halved"></i>Admin Access</button>
+          <a class="ghost-btn" href="https://discord.gg/vvyVGBDXjV" target="_blank" rel="noreferrer"><i class="fa-brands fa-discord"></i>Join Discord</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="auth-modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <h2>Account Portal</h2>
+          <p class="helper-text">Create a demo account, log in as a user, or use the hidden admin credentials.</p>
+        </div>
+        <button class="close-btn" id="close-modal" type="button" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" type="button" data-tab="login">Login</button>
+        <button class="auth-tab" type="button" data-tab="signup">Sign Up</button>
+      </div>
+      <div class="auth-panel active" data-panel="login">
+        <form class="modal-form" id="login-form">
+          <div class="field">
+            <label for="login-identifier">Email or Username</label>
+            <input id="login-identifier" name="identifier" type="text" placeholder="you@example.com or admin" required>
+          </div>
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" placeholder="Enter password" required>
+          </div>
+          <button class="primary-btn" type="submit"><i class="fa-solid fa-right-to-bracket"></i>Log In</button>
+        </form>
+        <p class="helper-text">Admin demo credentials: username <strong>admin</strong>, password <strong>admin123</strong>.</p>
+      </div>
+      <div class="auth-panel" data-panel="signup">
+        <form class="modal-form" id="signup-form">
+          <div class="field">
+            <label for="signup-email">Email</label>
+            <input id="signup-email" name="email" type="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="signup-password">Password</label>
+            <input id="signup-password" name="password" type="password" placeholder="Create a password" required>
+          </div>
+          <button class="primary-btn" type="submit"><i class="fa-solid fa-user-plus"></i>Create Account</button>
+        </form>
+        <p class="helper-text">Accounts are stored in localStorage for demo purposes only. No backend or payment flow is used.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-bar" id="status-bar" role="status" aria-live="polite"></div>
+  <script>
+    const STORAGE_KEYS = {
+      users: "uiahost-users",
+      vps: "uiahost-vps-plans",
+      mc: "uiahost-mc-plans",
+      session: "uiahost-session"
+    };
+
+    const ADMIN_CREDENTIALS = {
+      username: "admin",
+      password: "admin123"
+    };
+
+    const DEFAULT_VPS_PLANS = [
+      { id: "vps-1", name: "Intel Gold KVM 1", price: "₹500", processor: "Intel® Xeon® Gold 6149", cpu: "2 vCores", speed: "2.70 GHz Base (3.70 GHz Turbo)", ram: "8 GB DDR4 ECC Memory", storage: "50 GB NVMe SSD", backup: "1 Backup", bandwidth: "Unmetered Bandwidth (1 Gbps)", location: "IN, Delhi", protection: "DDoS Protection" },
+      { id: "vps-2", name: "Intel Gold KVM 2", price: "₹900", processor: "Intel® Xeon® Gold 6149", cpu: "4 vCores", speed: "2.70 GHz Base (3.70 GHz Turbo)", ram: "16 GB RAM", storage: "100 GB NVMe", backup: "1 Backup", bandwidth: "Unmetered Bandwidth (1 Gbps)", location: "IN, Delhi", protection: "DDoS Protection" },
+      { id: "vps-3", name: "Intel Gold KVM 3", price: "₹1500", processor: "Intel® Xeon® Gold 6149", cpu: "8 vCores", speed: "2.70 GHz Base (3.70 GHz Turbo)", ram: "32 GB RAM", storage: "150 GB NVMe", backup: "1 Backup", bandwidth: "Unmetered Bandwidth (1 Gbps)", location: "IN, Delhi", protection: "DDoS Protection" },
+      { id: "vps-4", name: "Intel Gold KVM 4", price: "₹2400", processor: "Intel® Xeon® Gold 6149", cpu: "16 vCores", speed: "2.70 GHz Base (3.70 GHz Turbo)", ram: "64 GB RAM", storage: "200 GB NVMe", backup: "1 Backup", bandwidth: "Unmetered Bandwidth (1 Gbps)", location: "IN, Delhi", protection: "DDoS Protection" }
+    ];
+
+    const DEFAULT_MC_PLANS = [
+      { id: "mc-1", name: "Grass Plan", price: "₹50/mo", memory: "2GB Memory", cores: "2 Cores", disk: "10GB Disk", protection: "DDoS Protection On-Demand" },
+      { id: "mc-2", name: "Stone Plan", price: "₹100/mo", memory: "4GB Memory", cores: "4 Cores", disk: "20GB Disk", protection: "" },
+      { id: "mc-3", name: "Diamond Plan", price: "₹200/mo", memory: "8GB Memory", cores: "6 Cores", disk: "30GB Disk", protection: "" },
+      { id: "mc-4", name: "Netherite Plan", price: "₹300/mo", memory: "12GB Memory", cores: "8 Cores", disk: "40GB Disk", protection: "" }
+    ];
+
+    const VISIBLE_VPS_FIELDS = [
+      { key: "processor", label: "Processor" },
+      { key: "cpu", label: "CPU" },
+      { key: "speed", label: "Clock Speed" },
+      { key: "ram", label: "Memory" },
+      { key: "storage", label: "Storage" },
+      { key: "backup", label: "Backup" },
+      { key: "bandwidth", label: "Bandwidth" },
+      { key: "location", label: "Location" },
+      { key: "protection", label: "Protection" }
+    ];
+
+    const VISIBLE_MC_FIELDS = [
+      { key: "memory", label: "Memory" },
+      { key: "cores", label: "CPU" },
+      { key: "disk", label: "Disk" },
+      { key: "protection", label: "Protection" }
+    ];
+
+    const ADMIN_FIELDS = {
+      vps: [
+        { key: "name", label: "Plan Name" },
+        { key: "price", label: "Price" },
+        { key: "processor", label: "Processor" },
+        { key: "cpu", label: "CPU" },
+        { key: "speed", label: "Clock Speed" },
+        { key: "ram", label: "RAM" },
+        { key: "storage", label: "Storage" },
+        { key: "backup", label: "Backup" },
+        { key: "bandwidth", label: "Bandwidth" },
+        { key: "location", label: "Location" },
+        { key: "protection", label: "Protection" }
+      ],
+      mc: [
+        { key: "name", label: "Plan Name" },
+        { key: "price", label: "Price" },
+        { key: "memory", label: "Memory" },
+        { key: "cores", label: "Cores" },
+        { key: "disk", label: "Disk" },
+        { key: "protection", label: "Protection" }
+      ]
+    };
+
+    const state = { authMode: "login", activeAction: null };
+
+    const ui = {
+      vpsGrid: document.getElementById("vps-grid"),
+      mcGrid: document.getElementById("mc-grid"),
+      accountArea: document.getElementById("account-area"),
+      adminArea: document.getElementById("admin-area"),
+      adminSection: document.getElementById("admin-panel"),
+      adminNavLink: document.getElementById("admin-nav-link"),
+      authTrigger: document.getElementById("auth-trigger"),
+      authTriggerLabel: document.getElementById("auth-trigger-label"),
+      authModal: document.getElementById("auth-modal"),
+      closeModal: document.getElementById("close-modal"),
+      heroAuthBtn: document.getElementById("hero-auth-btn"),
+      footerAdminLink: document.getElementById("footer-admin-link"),
+      loginForm: document.getElementById("login-form"),
+      signupForm: document.getElementById("signup-form"),
+      statusBar: document.getElementById("status-bar"),
+      totalPlans: document.getElementById("stat-total-plans"),
+      totalUsers: document.getElementById("stat-users"),
+      portalStatus: document.getElementById("stat-status")
+    };
+
+    function safeParse(value, fallback) {
+      try {
+        return JSON.parse(value) ?? fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function seedStorage() {
+      if (!localStorage.getItem(STORAGE_KEYS.vps)) {
+        localStorage.setItem(STORAGE_KEYS.vps, JSON.stringify(DEFAULT_VPS_PLANS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.mc)) {
+        localStorage.setItem(STORAGE_KEYS.mc, JSON.stringify(DEFAULT_MC_PLANS));
+      }
+      if (!localStorage.getItem(STORAGE_KEYS.users)) {
+        localStorage.setItem(STORAGE_KEYS.users, JSON.stringify([]));
+      }
+    }
+
+    function getUsers() {
+      return safeParse(localStorage.getItem(STORAGE_KEYS.users), []);
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(STORAGE_KEYS.users, JSON.stringify(users));
+    }
+
+    function getPlans(type) {
+      const key = type === "vps" ? STORAGE_KEYS.vps : STORAGE_KEYS.mc;
+      const defaults = type === "vps" ? DEFAULT_VPS_PLANS : DEFAULT_MC_PLANS;
+      return safeParse(localStorage.getItem(key), defaults);
+    }
+
+    function savePlans(type, plans) {
+      localStorage.setItem(type === "vps" ? STORAGE_KEYS.vps : STORAGE_KEYS.mc, JSON.stringify(plans));
+    }
+
+    function getSession() {
+      return safeParse(localStorage.getItem(STORAGE_KEYS.session), null);
+    }
+
+    function setSession(session) {
+      if (!session) {
+        localStorage.removeItem(STORAGE_KEYS.session);
+        return;
+      }
+      localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(session));
+    }
+
+    function getCurrentUser() {
+      const session = getSession();
+      if (!session || session.role !== "user") {
+        return null;
+      }
+      return getUsers().find((user) => user.email === session.email) || null;
+    }
+
+    function isAdminSession() {
+      const session = getSession();
+      return Boolean(session && session.role === "admin");
+    }
+
+    function showToast(message, type = "success") {
+      ui.statusBar.textContent = message;
+      ui.statusBar.className = "status-bar show " + type;
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => {
+        ui.statusBar.className = "status-bar";
+      }, 2600);
+    }
+
+    function openAuthModal(mode = "login") {
+      state.authMode = mode;
+      updateAuthTabs();
+      ui.authModal.classList.add("open");
+      ui.authModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeAuthModal() {
+      ui.authModal.classList.remove("open");
+      ui.authModal.setAttribute("aria-hidden", "true");
+      ui.loginForm.reset();
+      ui.signupForm.reset();
+      state.activeAction = null;
+    }
+
+    function updateAuthTabs() {
+      document.querySelectorAll(".auth-tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.tab === state.authMode);
+      });
+      document.querySelectorAll(".auth-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.panel === state.authMode);
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+  </script>
+  <script>
+    function renderPlanCard(type, plan) {
+      const isUser = Boolean(getCurrentUser());
+      const isAdmin = isAdminSession();
+      const fieldMap = type === "vps" ? VISIBLE_VPS_FIELDS : VISIBLE_MC_FIELDS;
+      const specs = fieldMap
+        .filter((item) => plan[item.key])
+        .map((item) => `<li><i class="fa-solid fa-circle-check"></i><span><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(plan[item.key])}</span></li>`)
+        .join("");
+
+      let note = "Login to order";
+      let buttonText = "Login to Order";
+      let buttonClass = "secondary-btn";
+      let buttonAttrs = `data-action="require-login"`;
+
+      if (isAdmin) {
+        note = "Admin can edit these plans below";
+        buttonText = "Open Admin Panel";
+        buttonClass = "ghost-btn";
+        buttonAttrs = `data-action="go-admin"`;
+      } else if (isUser) {
+        note = "Instant demo order, no payment required";
+        buttonText = "Order Now";
+        buttonClass = "primary-btn";
+        buttonAttrs = `data-action="order" data-type="${type}" data-id="${escapeHtml(plan.id)}"`;
+      }
+
+      return `
+        <article class="plan-card">
+          <div class="plan-chip">${type === "vps" ? "VPS Hosting" : "Minecraft"}</div>
+          <h3 class="plan-name">${escapeHtml(plan.name)}</h3>
+          <div class="plan-price"><strong>${escapeHtml(plan.price)}</strong><span>${type === "vps" ? "per tier" : "monthly"}</span></div>
+          <ul class="plan-specs">${specs}</ul>
+          <div class="order-note">${escapeHtml(note)}</div>
+          <button class="${buttonClass}" type="button" ${buttonAttrs}><i class="fa-solid fa-cart-plus"></i>${escapeHtml(buttonText)}</button>
+        </article>
+      `;
+    }
+
+    function renderCatalogs() {
+      const vpsPlans = getPlans("vps");
+      const mcPlans = getPlans("mc");
+      ui.vpsGrid.innerHTML = vpsPlans.map((plan) => renderPlanCard("vps", plan)).join("");
+      ui.mcGrid.innerHTML = mcPlans.map((plan) => renderPlanCard("mc", plan)).join("");
+      ui.totalPlans.textContent = String(vpsPlans.length + mcPlans.length);
+    }
+
+    function getPlanLookup() {
+      return new Map([...getPlans("vps"), ...getPlans("mc")].map((plan) => [plan.id, plan]));
+    }
+
+    function renderAccountArea() {
+      const session = getSession();
+      const currentUser = getCurrentUser();
+
+      if (!session || !currentUser) {
+        ui.accountArea.innerHTML = `
+          <div class="account-shell">
+            <div class="account-summary">
+              <h3>Guest Mode</h3>
+              <p>Browse every plan freely, then log in or create an account to unlock demo ordering and your personal services list.</p>
+              <div class="hero-actions" style="margin-top:20px;">
+                <button class="primary-btn" type="button" data-action="open-auth"><i class="fa-solid fa-right-to-bracket"></i>Login / Sign Up</button>
+              </div>
+            </div>
+            <div class="empty-state">Your services will appear here after you sign in and click <strong>Order Now</strong> on a VPS or Minecraft plan.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const purchasedPlans = (Array.isArray(currentUser.purchased) ? currentUser.purchased : [])
+        .map((id) => getPlanLookup().get(id))
+        .filter(Boolean);
+
+      ui.accountArea.innerHTML = `
+        <div class="account-shell">
+          <div class="account-summary">
+            <h3>Signed In</h3>
+            <p>Your demo account is active. Order any plan from the public catalog and it will appear instantly in My Services.</p>
+            <div class="hero-actions" style="margin-top:20px;">
+              <button class="secondary-btn" type="button" data-action="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>Logout</button>
+            </div>
+          </div>
+          <div class="services-list">
+            <h3>Purchased Services</h3>
+            <p>These are demo-only services linked to your browser account.</p>
+            <div class="services-grid" style="margin-top:16px;">
+              ${purchasedPlans.length ? purchasedPlans.map((plan) => `
+                <div class="service-card">
+                  <div>
+                    <strong>${escapeHtml(plan.name)}</strong>
+                    <span>${escapeHtml(plan.price)} • ${plan.id.startsWith("vps") ? "VPS Hosting" : "Minecraft Hosting"}</span>
+                  </div>
+                  <div class="service-badge">Active Demo</div>
+                </div>
+              `).join("") : `<div class="empty-state">No purchased plans yet. Pick a VPS or MC plan above and place a demo order.</div>`}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminEditor(type, plans) {
+      const fields = ADMIN_FIELDS[type];
+      const title = type === "vps" ? "Manage VPS Plans" : "Manage MC Plans";
+      return `
+        <section class="admin-form-card">
+          <div class="admin-form-header">
+            <div>
+              <h3>${title}</h3>
+              <p>Edit, add, or remove plans. Saving updates the public storefront immediately.</p>
+            </div>
+            <button class="mini-btn" type="button" data-action="add-plan" data-type="${type}"><i class="fa-solid fa-plus"></i>Add ${type.toUpperCase()} Plan</button>
+          </div>
+          <div class="plan-editor-list">
+            ${plans.map((plan, index) => `
+              <div class="plan-editor" data-editor-type="${type}" data-plan-id="${escapeHtml(plan.id)}">
+                <div class="plan-editor-top">
+                  <div><strong>${escapeHtml(plan.name || `New ${type.toUpperCase()} Plan ${index + 1}`)}</strong></div>
+                  <span class="live-pill">${escapeHtml(plan.id)}</span>
+                </div>
+                <div class="admin-form-grid">
+                  ${fields.map((field) => `
+                    <div class="field ${field.key === "processor" || field.key === "bandwidth" ? "full" : ""}">
+                      <label>${escapeHtml(field.label)}</label>
+                      <input type="text" data-field="${escapeHtml(field.key)}" value="${escapeHtml(plan[field.key] || "")}">
+                    </div>
+                  `).join("")}
+                </div>
+                <div class="form-actions">
+                  <button class="save-btn" type="button" data-action="save-plan" data-type="${type}" data-id="${escapeHtml(plan.id)}"><i class="fa-solid fa-floppy-disk"></i>Save</button>
+                  <button class="delete-btn" type="button" data-action="delete-plan" data-type="${type}" data-id="${escapeHtml(plan.id)}"><i class="fa-solid fa-trash"></i>Delete</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderAdminArea() {
+      if (!isAdminSession()) {
+        ui.adminSection.classList.add("hidden");
+        ui.adminNavLink.classList.add("hidden");
+        ui.adminArea.innerHTML = "";
+        return;
+      }
+
+      const users = getUsers();
+      const vpsPlans = getPlans("vps");
+      const mcPlans = getPlans("mc");
+      ui.adminSection.classList.remove("hidden");
+      ui.adminNavLink.classList.remove("hidden");
+
+      ui.adminArea.innerHTML = `
+        <div class="admin-banner">
+          <div><strong>Admin Mode Active</strong><div>Public storefront and dashboard controls are visible together.</div></div>
+          <button class="secondary-btn" type="button" data-action="admin-logout"><i class="fa-solid fa-arrow-right-from-bracket"></i>Admin Logout</button>
+        </div>
+        <div class="admin-grid">
+          <div class="admin-card"><h3>Total VPS Plans</h3><p>${vpsPlans.length} configurable VPS products are live right now.</p></div>
+          <div class="admin-card"><h3>Total MC Plans</h3><p>${mcPlans.length} Minecraft hosting plans are visible on the storefront.</p></div>
+          <div class="admin-card"><h3>Registered Users</h3><p>${users.length} user account${users.length === 1 ? "" : "s"} stored in localStorage.</p></div>
+        </div>
+        <div class="manage-grid">
+          ${renderAdminEditor("vps", vpsPlans)}
+          ${renderAdminEditor("mc", mcPlans)}
+        </div>
+        <div class="user-list" style="margin-top:18px;">
+          <h3>Registered Users</h3>
+          <p>Emails only are shown here for the demo. Purchased counts reflect saved plan IDs.</p>
+          <div class="users-stack">
+            ${users.length ? users.map((user) => `<div class="user-pill"><strong>${escapeHtml(user.email)}</strong><span>${Array.isArray(user.purchased) ? user.purchased.length : 0} purchased plan(s)</span></div>`).join("") : `<div class="empty-state">No registered users yet.</div>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAuthTrigger() {
+      const session = getSession();
+      if (!session) {
+        ui.authTriggerLabel.textContent = "Login / Sign Up";
+        ui.portalStatus.textContent = "Guest";
+        return;
+      }
+      if (session.role === "admin") {
+        ui.authTriggerLabel.textContent = "Admin Active";
+        ui.portalStatus.textContent = "Admin";
+        return;
+      }
+      ui.authTriggerLabel.textContent = session.email;
+      ui.portalStatus.textContent = "User";
+    }
+
+    function renderAll() {
+      renderCatalogs();
+      renderAccountArea();
+      renderAdminArea();
+      renderAuthTrigger();
+      ui.totalUsers.textContent = String(getUsers().length);
+    }
+  </script>
+  <script>
+    function handleSignup(event) {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const email = String(formData.get("email") || "").trim().toLowerCase();
+      const password = String(formData.get("password") || "").trim();
+
+      if (!email || !password) {
+        showToast("Please enter both email and password.", "error");
+        return;
+      }
+      if (email === ADMIN_CREDENTIALS.username) {
+        showToast("That username is reserved for admin access.", "error");
+        return;
+      }
+
+      const users = getUsers();
+      if (users.some((user) => user.email === email)) {
+        showToast("An account with that email already exists.", "error");
+        return;
+      }
+
+      users.push({ email, password, purchased: [] });
+      saveUsers(users);
+      setSession({ role: "user", email });
+      closeAuthModal();
+      renderAll();
+      showToast("Account created and logged in.");
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const identifier = String(formData.get("identifier") || "").trim();
+      const password = String(formData.get("password") || "").trim();
+
+      if (identifier === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        setSession({ role: "admin", username: ADMIN_CREDENTIALS.username });
+        closeAuthModal();
+        renderAll();
+        location.hash = "admin-panel";
+        showToast("Admin login successful.");
+        return;
+      }
+
+      const email = identifier.toLowerCase();
+      const user = getUsers().find((item) => item.email === email && item.password === password);
+      if (!user) {
+        showToast("Invalid login credentials.", "error");
+        return;
+      }
+
+      setSession({ role: "user", email: user.email });
+      closeAuthModal();
+      renderAll();
+      showToast(state.activeAction === "order" ? "Login complete. You can order any plan now." : "Logged in successfully.");
+    }
+
+    function logout() {
+      setSession(null);
+      renderAll();
+      showToast("You have been logged out.");
+    }
+
+    function orderPlan(id) {
+      const currentUser = getCurrentUser();
+      if (!currentUser) {
+        state.activeAction = "order";
+        openAuthModal("login");
+        showToast("Please log in to order a plan.", "error");
+        return;
+      }
+
+      const users = getUsers();
+      const userIndex = users.findIndex((user) => user.email === currentUser.email);
+      if (userIndex === -1) {
+        showToast("Unable to locate your account.", "error");
+        return;
+      }
+
+      users[userIndex].purchased = Array.isArray(users[userIndex].purchased) ? users[userIndex].purchased : [];
+      if (users[userIndex].purchased.includes(id)) {
+        showToast("That plan is already in your services list.", "error");
+        return;
+      }
+
+      users[userIndex].purchased.push(id);
+      saveUsers(users);
+      renderAll();
+      location.hash = "my-services";
+      showToast("Plan added to My Services.");
+    }
+
+    function addPlan(type) {
+      const plans = getPlans(type);
+      plans.push(type === "vps"
+        ? { id: "vps-" + Date.now(), name: "New VPS Plan", price: "Rs 0", processor: "", cpu: "", speed: "", ram: "", storage: "", backup: "", bandwidth: "", location: "", protection: "" }
+        : { id: "mc-" + Date.now(), name: "New MC Plan", price: "Rs 0/mo", memory: "", cores: "", disk: "", protection: "" });
+      savePlans(type, plans);
+      renderAll();
+      location.hash = "admin-panel";
+      showToast(type.toUpperCase() + " plan added.");
+    }
+
+    function savePlan(type, id) {
+      const plans = getPlans(type);
+      const editor = document.querySelector(`[data-editor-type="${type}"][data-plan-id="${id}"]`);
+      if (!editor) {
+        showToast("Could not find the selected plan editor.", "error");
+        return;
+      }
+
+      const updatedValues = {};
+      ADMIN_FIELDS[type].forEach((field) => {
+        const input = editor.querySelector(`[data-field="${field.key}"]`);
+        updatedValues[field.key] = input ? input.value.trim() : "";
+      });
+
+      if (!updatedValues.name || !updatedValues.price) {
+        showToast("Plan name and price are required.", "error");
+        return;
+      }
+
+      const index = plans.findIndex((plan) => plan.id === id);
+      if (index === -1) {
+        showToast("Unable to update that plan.", "error");
+        return;
+      }
+
+      plans[index] = { ...plans[index], ...updatedValues };
+      savePlans(type, plans);
+      renderAll();
+      showToast("Plan saved successfully.");
+    }
+
+    function deletePlan(type, id) {
+      const currentPlans = getPlans(type);
+      const nextPlans = currentPlans.filter((plan) => plan.id !== id);
+      if (nextPlans.length === currentPlans.length) {
+        showToast("Plan not found.", "error");
+        return;
+      }
+
+      savePlans(type, nextPlans);
+      saveUsers(getUsers().map((user) => ({
+        ...user,
+        purchased: Array.isArray(user.purchased) ? user.purchased.filter((planId) => planId !== id) : []
+      })));
+      renderAll();
+      showToast("Plan deleted.");
+    }
+
+    document.addEventListener("click", (event) => {
+      const target = event.target.closest("[data-action]");
+      if (!target) {
+        return;
+      }
+
+      const action = target.dataset.action;
+      if (action === "open-auth") openAuthModal("login");
+      if (action === "require-login") { state.activeAction = "order"; openAuthModal("login"); }
+      if (action === "go-admin" && isAdminSession()) location.hash = "admin-panel";
+      if (action === "order") orderPlan(target.dataset.id);
+      if (action === "logout" || action === "admin-logout") logout();
+      if (action === "add-plan" && isAdminSession()) addPlan(target.dataset.type);
+      if (action === "save-plan" && isAdminSession()) savePlan(target.dataset.type, target.dataset.id);
+      if (action === "delete-plan" && isAdminSession()) deletePlan(target.dataset.type, target.dataset.id);
+    });
+
+    ui.authTrigger.addEventListener("click", () => {
+      if (getSession()) {
+        logout();
+      } else {
+        openAuthModal("login");
+      }
+    });
+
+    ui.heroAuthBtn.addEventListener("click", () => openAuthModal("login"));
+    ui.footerAdminLink.addEventListener("click", () => openAuthModal("login"));
+    ui.closeModal.addEventListener("click", closeAuthModal);
+
+    ui.authModal.addEventListener("click", (event) => {
+      if (event.target === ui.authModal) closeAuthModal();
+    });
+
+    document.querySelectorAll(".auth-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        state.authMode = tab.dataset.tab;
+        updateAuthTabs();
+      });
+    });
+
+    ui.loginForm.addEventListener("submit", handleLogin);
+    ui.signupForm.addEventListener("submit", handleSignup);
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && ui.authModal.classList.contains("open")) {
+        closeAuthModal();
+      }
+    });
+
+    seedStorage();
+    renderAll();
+  </script>
+</body>
+</html>
