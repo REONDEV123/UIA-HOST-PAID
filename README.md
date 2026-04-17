@@ -1,2 +1,9 @@
 # UIA-HOST-PAID
 The Best Website For Your Hosting
+
+
+**ADMIN ID - ADMIN ADMIN PASS - admin123 **
+
+# CONNECT IT YOUR DOMAIN AND ENJOY
+
+DEVLOPER - REON
